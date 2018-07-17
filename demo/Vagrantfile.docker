@@ -1,12 +1,12 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/xenial64"
 
   config.vm.define "app" do |app|
     app.vm.provision "shell", path: "provision-celery.sh"
     app.vm.box = "ubuntu/xenial64"
     app.vm.network "private_network", ip: "192.168.144.10", virtualbox__intnet: true
-    app.vm.network "forwarded_port", guest: 5555, host: 5555
     app.vm.hostname = "app"
   end
 
@@ -32,11 +32,10 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "littlebunny" do |box|
-    box.vm.provision "shell", path: "provision-rabbit.sh"
-    box.vm.box = "ubuntu/xenial64"
-    box.vm.network "private_network", ip: "192.168.144.99", virtualbox__intnet: true
-    box.vm.hostname = "rabbit"
+    config.vm.provider "docker" do |d|
+      #d.image = "rabbitmq"
+      d.build_dir = "docker-wabbit"
+    end
   end
-
 end
 

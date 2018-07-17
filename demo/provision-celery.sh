@@ -2,7 +2,7 @@
 
 export LANG=C
 export LC_ALL=C
-[[ $(whoami) == 'vagrant' ]] || exec runuser -u vagrant $0
+[[ $(whoami) == 'vagrant' ]] || exec runuser - vagrant $0
 
 sudo apt-get update \
 && sudo apt-get -y upgrade \
@@ -10,6 +10,7 @@ sudo apt-get update \
 && virtualenv -p python3 venv \
 && source venv/bin/activate \
 && pip install celery \
-&& cp /vagrant/myapp.py .
+&& cp -p /vagrant/*.{sh,py} . \
+&& sudo cp /vagrant/hosts /etc/hosts
 
 
